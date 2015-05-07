@@ -1,3 +1,4 @@
 Flask
-WTForms
+wtforms
 requests
+Flask-WTF

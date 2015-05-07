@@ -1,33 +1,17 @@
 {% extends 'layout.html' %}
 {% block content %}
-		<form action="/" method="post">
+		<form role="form" method="post" action="/rooms">
 			<div class="form group">
         		<p class="lead">Pick a day of the week</p>
-				<select class="form-control">
-					<option> Monday </option>
-					<option> Tuesday </option>
-					<option> Wednesday </option>
-					<option> Thursday </option>
-					<option> Friday </option>
-				</select>
+				{{form.day(type="select", class_="form-control", required=true)}}
 				<br>
         		<p class="lead">Pick a campus</p>
-				<select class="form-control">
-					<option> Busch </option>
-					<option> Livingston </option>
-					<option> College Ave </option>
-					<option> Cook/Douglass </option>
-				</select>
+				{{form.campus(type="select", class_="form-control", required=true)}}
 				<br>
         		<p class="lead">Pick a building</p>
-				<select class="form-control">
-					<option> All buildings </option>
-					{% for building in buildings %}
-					<option> {{ building }} </option>
-					{% endfor %}
-				</select>
+				{{form.building(type="select", class_="form-control", required=true)}}
 				<br>
 			</div>
-	  		<button id="submitQ" type="button" class="btn btn-danger">Submit</button>
+	  		<button id="submitQ" type="submit" class="btn btn-danger">Submit</button>
 		</form>
 {% endblock %}

@@ -1,3 +1,7 @@
+a, a:hover {
+	text-decoration: none !important;
+}
+
 .subhead h1 {
     font-size: 54px;
     color: #333;
@@ -48,4 +52,26 @@ ol li b {
 
 .form-control {
 	text-align: center;
+}
+
+.panel .panel-title {
+	color: #fff;
+}
+
+.panel-danger {
+	border-color: #cc0000 !important;
+}
+
+.panel-danger > .panel-heading {
+	background-color: #cc0000 !important;
+	border-color: #cc0000 !important;
+}
+
+.panel-success {
+	border-color: green !important;
+}
+
+.panel-success > .panel-heading {
+	background-color: green !important;
+	border-color: green !important;
 }
