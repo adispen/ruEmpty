@@ -5,13 +5,18 @@ from wtforms import TextField, TextAreaField, SelectField
 import requests
 
 app = Flask(__name__)
-app.config.from_pyfile("app.cfg")
-buildingsArr = [("Test", 'Test'), ("Test2", 'Test2'), ("Test3", 'Test3')]
+app.config.from_pyfile("empty.cfg")
+
+def getBuildings():
+	campus = request.form.get("campus")
+	form = queryForm(request.POST)
+	if campus == "Busch":
+		form.building.choices = buildingsArr;
 
 class queryForm(Form):
 	day = SelectField(u'Day of the Week', coerce=str, choices=[("Monday", 'Monday'), ("Tuesday", 'Tuesday'), ("Wednesday", 'Wednesday'), ("Thursday", 'Thursday'), ("Friday", 'Friday')])
 	campus = SelectField(u'Campus', coerce=str, choices=[("Busch", 'Busch'), ("Livingston", 'Livingston'), ("College Ave", 'College Ave'), ("Cook/Douglass", 'Cook/Douglass')])
-	building = SelectField(u'Day of the Week', coerce=str, choices=buildingsArr)
+	building = SelectField(u'Building', coerce=str, choices=[("Please choose a campus first", 'Please choose a campus first'), ("other", 'other')])
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
@@ -24,6 +29,12 @@ def rooms_page():
 	campusName = request.form.get("campus")
 	buildingName = request.form.get("building")
 	return render_template('rooms.html', dayOfWeek=dayOfWeek, campusName=campusName, buildingName=buildingName)
+
+@app.route('/_getBuildings', methods=['GET', 'POST'])
+def getBuildings():
+	campus = request.args['campus'].upper()
+	print campus
+	return campus
 
 if __name__ == '__main__':
     app.run(debug=True)
