@@ -69,6 +69,10 @@ def rooms_page():
 	dayOfWeek = request.form.get("day")
 	campusName = request.form.get("campus")
 	buildingName = request.form.get("building")
+
+	if campusName == "Please choose a campus" or buildingName == "Please choose a campus first":
+		return render_template('bug.html')
+
 	rooms = []
 	timesArr = []
 	with open('ruemptyJSON.json') as data_file:
