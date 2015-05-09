@@ -83,8 +83,11 @@ def rooms_page():
 							for day, times in room.iteritems():
 								if day == "Room Number":
 									continue
-								if day == dayOfWeek[:1]:
-							#		print dayOfWeek[:1]
+								if dayOfWeek == "Thursday" and day == "TH":
+									newTimeSlot = timeSlot(times)
+									timesArr.append(newTimeSlot)
+								elif day == dayOfWeek[:1] and dayOfWeek != "Thursday":
+							#		print dayOfWeek
 							#		print times
 									newTimeSlot = timeSlot(times)
 									timesArr.append(newTimeSlot)
