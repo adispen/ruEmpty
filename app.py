@@ -4,9 +4,26 @@ from wtforms.validators import Required
 from wtforms import TextField, TextAreaField, SelectField
 import requests
 import json
+import re
+from jinja2 import evalcontextfilter, Markup, escape
 
 app = Flask(__name__)
 app.config.from_pyfile("empty.cfg")
+
+
+_paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
+
+app = Flask(__name__)
+
+class timeSlot:
+	def __init__(self, day, time):
+		self.day = day
+		self.time = time
+
+class roomClass:
+	def __init__(self, roomNum, slot):
+		self.roomNum = roomNum
+		self.slot = slot
 
 def getBuildings():
 	campus = request.form.get("campus")
@@ -29,7 +46,32 @@ def rooms_page():
 	dayOfWeek = request.form.get("day")
 	campusName = request.form.get("campus")
 	buildingName = request.form.get("building")
-	return render_template('rooms.html', dayOfWeek=dayOfWeek, campusName=campusName, buildingName=buildingName)
+	rooms = []
+	timesArr = []
+	with open('ruemptyJSON.json') as data_file:
+		data = json.load(data_file)
+		for entry in data:
+			if entry["Campus Name"] == campusName:
+				for building in entry["Buildings"]:
+					if building["Building Name"] == buildingName:
+						for room in building["Rooms"]:
+							roomNum = room["Room Number"]
+							print "********* START" + roomNum + "*********** \n"
+							for day, times in room.iteritems():
+								if day == "Room Number":
+									continue
+								print day +"\n"+times
+								newTimeSlot = timeSlot(day, times)
+								timesArr.append(newTimeSlot)
+
+							print len(timesArr)
+							newRoom = roomClass(roomNum, timesArr)
+							timesArr=[]
+
+							rooms.append(newRoom)
+							print  "******** END" + roomNum + " **********  \n"
+
+	return render_template('rooms.html', dayOfWeek=dayOfWeek, campusName=campusName, buildingName=buildingName, rooms=rooms)
 
 @app.route('/_getBuildings', methods=['GET', 'POST'])
 def getBuildings():
