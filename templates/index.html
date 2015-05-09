@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block content %}
-		<form role="form" method="post" action="/rooms">
+		<form name="myForm" role="form" method="post" action="/rooms">
 			<div class="form group">
         		<p class="lead">Pick a day of the week</p>
 				{{form.day(type="select", class_="form-control", required=true)}}

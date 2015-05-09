@@ -14,6 +14,11 @@ $('#building').change(function () {
 $('#campus').change(function () {
   $.get('/_getBuildings', {
     campus: $('#campus option:selected').text()
+  }, function(data){
+	  var numItems = data.buildings.length;
+	  for(items in data.buildings){
+		  var selForm = document.myForm.building
+		  selForm.options[selForm.options.length] = new Option(data.buildings[items], data.buildings[items]);
+	  }
   })
-  console.log($('#campus option:selected').text())
 });
