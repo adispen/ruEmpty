@@ -6,9 +6,16 @@ import requests
 import json
 import re
 from jinja2 import evalcontextfilter, Markup, escape
+import logging
+import sys
 
+    
 app = Flask(__name__)
 app.config.from_pyfile("empty.cfg")
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.DEBUG)
+
+app.logger.debug("Hello World")
 
 
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
@@ -104,6 +111,7 @@ def getBuildings():
 
 	print buildingArr
 	return jsonify(buildings=buildingArr)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

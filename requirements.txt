@@ -1,4 +1,3 @@
 Flask
 wtforms
-requests
-Flask-WTF
+Flask-WTF==0.10.3
