@@ -12,12 +12,28 @@ app.config.from_pyfile("empty.cfg")
 
 
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
-
-app = Flask(__name__)
+@app.template_filter()
+@evalcontextfilter
+def linebreaks(eval_ctx, value):
+	"""Converts newlines into <p> and <br />s."""
+	value = re.sub(r'\r\n|\r|\n', '\n', value) # normalize newlines
+	paras = re.split('\n{2,}', value)
+	paras = [u'<p>%s</p>' % p.replace('\n', '<br />') for p in paras]
+	paras = u'\n\n'.join(paras)
+	return Markup(paras)
+ 
+@app.template_filter()
+@evalcontextfilter
+def linebreaksbr(eval_ctx, value):
+	"""Converts newlines into <p> and <br />s."""
+	value = re.sub(r'\r\n|\r|\n', '\n', value) # normalize newlines
+	paras = re.split('\n{2,}', value)
+	paras = [u'%s' % p.replace('\n', '<br />') for p in paras]
+	paras = u'\n\n'.join(paras)
+	return Markup(paras) 
 
 class timeSlot:
-	def __init__(self, day, time):
-		self.day = day
+	def __init__(self, time):
 		self.time = time
 
 class roomClass:
@@ -60,9 +76,11 @@ def rooms_page():
 							for day, times in room.iteritems():
 								if day == "Room Number":
 									continue
-								print day +"\n"+times
-								newTimeSlot = timeSlot(day, times)
-								timesArr.append(newTimeSlot)
+								if day == dayOfWeek[:1]:
+									print dayOfWeek[:1]
+									print times
+									newTimeSlot = timeSlot(times)
+									timesArr.append(newTimeSlot)
 
 							print len(timesArr)
 							newRoom = roomClass(roomNum, timesArr)
