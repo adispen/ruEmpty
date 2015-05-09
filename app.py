@@ -79,22 +79,22 @@ def rooms_page():
 					if building["Building Name"] == buildingName:
 						for room in building["Rooms"]:
 							roomNum = room["Room Number"]
-							print "********* START" + roomNum + "*********** \n"
+							#print "********* START" + roomNum + "*********** \n"
 							for day, times in room.iteritems():
 								if day == "Room Number":
 									continue
 								if day == dayOfWeek[:1]:
-									print dayOfWeek[:1]
-									print times
+							#		print dayOfWeek[:1]
+							#		print times
 									newTimeSlot = timeSlot(times)
 									timesArr.append(newTimeSlot)
 
-							print len(timesArr)
+							#print len(timesArr)
 							newRoom = roomClass(roomNum, timesArr)
 							timesArr=[]
 
 							rooms.append(newRoom)
-							print  "******** END" + roomNum + " **********  \n"
+							#print  "******** END" + roomNum + " **********  \n"
 
 	return render_template('rooms.html', dayOfWeek=dayOfWeek, campusName=campusName, buildingName=buildingName, rooms=rooms)
 
@@ -109,7 +109,7 @@ def getBuildings():
 				for buildingEntry in entry["Buildings"]:
 					buildingArr.append(buildingEntry["Building Name"])
 
-	print buildingArr
+	#print buildingArr
 	return jsonify(buildings=buildingArr)
 
 
