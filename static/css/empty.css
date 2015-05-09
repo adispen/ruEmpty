@@ -75,3 +75,8 @@ ol li b {
 	background-color: green !important;
 	border-color: green !important;
 }
+
+#android-button {
+	text-align: center;
+	padding-top: 2%;
+}
