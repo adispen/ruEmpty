@@ -10,9 +10,7 @@
 	  <h3 class="panel-title">{{ room.roomNum }}</h3>
   </div>
   <ul class="list-group">
-	  {% for slot in room.slot %}
-	  <li class="list-group-item">{{ slot.time|linebreaksbr|safe }} </li>
-	  {% endfor %}
+	  <li class="list-group-item">{{ room.time|linebreaksbr|safe }} </li>
   </ul>
 </div>
 {% endfor %}

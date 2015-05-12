@@ -39,14 +39,10 @@ def linebreaksbr(eval_ctx, value):
 	paras = u'\n\n'.join(paras)
 	return Markup(paras) 
 
-class timeSlot:
-	def __init__(self, time):
-		self.time = time
-
 class roomClass:
-	def __init__(self, roomNum, slot):
+	def __init__(self, roomNum, time):
 		self.roomNum = roomNum
-		self.slot = slot
+		self.time = time
 
 def getBuildings():
 	campus = request.form.get("campus")
@@ -55,9 +51,18 @@ def getBuildings():
 		form.building.choices = buildingsArr;
 
 class queryForm(Form):
-	day = SelectField(u'Day of the Week', coerce=str, choices=[("Monday", 'Monday'), ("Tuesday", 'Tuesday'), ("Wednesday", 'Wednesday'), ("Thursday", 'Thursday'), ("Friday", 'Friday')])
-	campus = SelectField(u'Campus', coerce=str, choices=[("Please choose a campus", 'Please choose a campus'), ("Busch", 'Busch'), ("Livingston", 'Livingston'), ("College Avenue", 'College Avenue'), ("Cook/Douglass", 'Cook/Douglass')])
-	building = SelectField(u'Building', coerce=str, choices=[("Please choose a campus first", 'Please choose a campus first')])
+	dayChoices = [("Monday", 'Monday'), ("Tuesday", 'Tuesday'), \
+			("Wednesday", 'Wednesday'), ("Thursday", 'Thursday'), \
+			("Friday", 'Friday')]
+	campusChoices = [("Please choose a campus", 'Please choose a campus'), \
+			("Busch", 'Busch'), ("Livingston", 'Livingston'), \
+			("College Avenue", 'College Avenue'), \
+			("Cook/Douglass", 'Cook/Douglass')]
+	defaultBuildings = [("Please choose a campus first", \
+			'Please choose a campus first')] 
+	day = SelectField(u'Day of the Week', coerce=str, choices=dayChoices)
+	campus = SelectField(u'Campus', coerce=str, choices=campusChoices)
+	building = SelectField(u'Building', coerce=str, choices=defaultBuildings)
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
@@ -70,40 +75,29 @@ def rooms_page():
 	campusName = request.form.get("campus")
 	buildingName = request.form.get("building")
 
-	if campusName == "Please choose a campus" or buildingName == "Please choose a campus first":
+	if campusName == "Please choose a campus" \
+			or buildingName == "Please choose a campus first":
 		return render_template('bug.html')
 
 	rooms = []
-	timesArr = []
+	#timesArr = []
 	with open('ruemptyJSON.json') as data_file:
 		data = json.load(data_file)
-		for entry in data:
-			if entry["Campus Name"] == campusName:
-				for building in entry["Buildings"]:
-					if building["Building Name"] == buildingName:
-						for room in building["Rooms"]:
-							roomNum = room["Room Number"]
-							#print "********* START" + roomNum + "*********** \n"
-							for day, times in room.iteritems():
-								if day == "Room Number":
-									continue
-								if dayOfWeek == "Thursday" and day == "TH":
-									newTimeSlot = timeSlot(times)
-									timesArr.append(newTimeSlot)
-								elif day == dayOfWeek[:1] and dayOfWeek != "Thursday":
-							#		print dayOfWeek
-							#		print times
-									newTimeSlot = timeSlot(times)
-									timesArr.append(newTimeSlot)
+		i = 0
+		campus = filter(lambda entry: entry["Campus Name"] == campusName, data)
+		building = filter(lambda entry: entry["Building Name"] == buildingName\
+				, campus[0]["Buildings"])
+		for room in building[0]["Rooms"]:
+			roomNum = room["Room Number"]
+			if dayOfWeek == "Thursday":
+				newRoom = roomClass(roomNum, room["TH"])
+				rooms.append(newRoom)
+				continue
+			newRoom = roomClass(roomNum, room[dayOfWeek[:1]])
+			rooms.append(newRoom)
 
-							#print len(timesArr)
-							newRoom = roomClass(roomNum, timesArr)
-							timesArr=[]
-
-							rooms.append(newRoom)
-							#print  "******** END" + roomNum + " **********  \n"
-
-	return render_template('rooms.html', dayOfWeek=dayOfWeek, campusName=campusName, buildingName=buildingName, rooms=rooms)
+	return render_template('rooms.html', dayOfWeek=dayOfWeek, \
+			campusName=campusName, buildingName=buildingName, rooms=rooms)
 
 @app.route('/_getBuildings', methods=['GET', 'POST'])
 def getBuildings():
@@ -111,13 +105,12 @@ def getBuildings():
 	buildingArr = []
 	with  open('ruemptyJSON.json') as data_file:
 		data = json.load(data_file)
-		for entry in data:
-			if entry["Campus Name"] == campus:
-				for buildingEntry in entry["Buildings"]:
-					buildingArr.append(buildingEntry["Building Name"])
+		campusData = filter(lambda entry: entry["Campus Name"] == campus, data)
+		for building in campusData[0]["Buildings"]:
+			buildingArr.append(building["Building Name"])
 
-	#print buildingArr
-	return jsonify(buildings=buildingArr)
+	alphaBuildings = sorted(buildingArr)
+	return jsonify(buildings=alphaBuildings)
 
 
 if __name__ == '__main__':
