@@ -55,9 +55,9 @@ class queryForm(Form):
 			("Wednesday", 'Wednesday'), ("Thursday", 'Thursday'), \
 			("Friday", 'Friday')]
 	campusChoices = [("Please choose a campus", 'Please choose a campus'), \
-			("Busch", 'Busch'), ("Livingston", 'Livingston'), \
-			("College Avenue", 'College Avenue'), \
-			("Cook/Douglass", 'Cook/Douglass')]
+			("Busch", 'Busch'), ("College Avenue", 'College Avenue'), \
+			("Cook/Douglass", 'Cook/Douglass'), \
+			("Livingston", 'Livingston')]
 	defaultBuildings = [("Please choose a campus first", \
 			'Please choose a campus first')] 
 	day = SelectField(u'Day of the Week', coerce=str, choices=dayChoices)
