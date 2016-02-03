@@ -83,4 +83,8 @@ ol li b {
 
 footer{
 	 text-align: center;
- }
+}
+
+.btn[disabled]{
+	opacity: .3 !important;
+}
