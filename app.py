@@ -15,9 +15,6 @@ app.config.from_pyfile("empty.cfg")
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.DEBUG)
 
-app.logger.debug("Hello World")
-
-
 _paragraph_re = re.compile(r'(?:\r\n|\r|\n){2,}')
 @app.template_filter()
 @evalcontextfilter
@@ -73,7 +70,7 @@ def main_page():
 	"""Creating a form from the defined class above, rendering it on the page.
 	"""
 	form = queryForm()
-	return render_template('index.html', form=form)
+	return render_template('down.html', form=form)
 
 @app.route('/rooms', methods=['GET', 'POST'])
 def rooms_page():
